@@ -38,7 +38,7 @@ def get_winners(players):
         else:
             should_append = True
             for winner in winners:
-                if player.get_score() > winner.get_score(): ########
+                if player.get_score() > winner.get_score():
                     winners.remove(winner)
                 elif player.get_score() < winner.get_score():
                     should_append = False
