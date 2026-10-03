@@ -1,5 +1,4 @@
 # Emoji Racing
-============
 
 A simple Python terminal game where multiple players compete by earning
 random points in each round.
