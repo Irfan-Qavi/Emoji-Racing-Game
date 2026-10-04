@@ -114,12 +114,16 @@ if __name__ == "__main__":
 
         try:
             gaps = int(input("How many max spaces you want in a window? "))
+            if gaps <= 0:
+                raise ValueError("Max spaces must be a positive integer.")
         except:
             print("Proper input was not given, so starting the game again.")
             continue
 
         try:
             player_count = int(input("How many players you want? "))
+            if player_count <= 0:
+                raise ValueError("There must be atleast one player.")
         except:
             print("Proper input was not given, so starting the game again.")
             continue
@@ -167,12 +171,15 @@ if __name__ == "__main__":
         try:
             round_count = int(input("How many rounds you want? "))
             gap()
+            if round_count <= 0:
+                raise ValueError("There must be atleast one round.")
         except:
             print("Proper input was not given, so starting the game again.")
             continue
             
         # Each round has its own minimum and maximum points for random scoring.
         scores = []
+        valid_setup = True
         for i in range(1, round_count + 1):
             try:
                 minimum_score = int(input(f"How many min points you want in {str(i) + get_rank_suffix(i)} round? "))
@@ -180,10 +187,14 @@ if __name__ == "__main__":
                 gap()
             except:
                 print("Proper input was not given, so starting the game again.")
-                continue
-                
+                valid_setup = False
+                break
+
             scores.append([minimum_score, maximum_score])
-            
+
+        if not valid_setup:
+            continue
+
         gap()
 
         # Play each round and display the updated leaderboard.
@@ -226,10 +237,10 @@ if __name__ == "__main__":
         else:
             print("It's a draw between everyone.")
 
-        match input("Want to play again? "):
-            case "Yes":
+        match input("Want to play again? ").lower():
+            case "yes":
                 print("Ok, game restarted.")
-            case "No":
+            case "no":
                 print("Bye!")
                 break
             case _:
