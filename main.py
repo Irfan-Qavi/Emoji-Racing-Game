@@ -31,32 +31,33 @@ def end(): input()
 
 # Return the player(s) tied for the highest score.
 def get_winners(players):
-    winners = []
-    for player in players:
-        if len(winners) == 0:
+    if not players:
+        return []
+
+    winners = [players[0]]
+    highest_score = players[0].get_score()
+
+    for player in players[1:]:
+        score = player.get_score()
+        if score > highest_score:
+            highest_score = score
+            winners = [player]
+        elif score == highest_score:
             winners.append(player)
-        else:
-            should_append = True
-            for winner in winners:
-                if player.get_score() > winner.get_score():
-                    winners.remove(winner)
-                elif player.get_score() < winner.get_score():
-                    should_append = False
-                    break
-            if should_append:
-                winners.append(player)
-    
+
     return winners
 
 
 # Add a readable ordinal suffix to numbers in input prompts.
 def get_rank_suffix(rank):
-    if type(rank) != int:
+    if not isinstance(rank, int):
         return ""
 
-    match int(str(rank)[-1:]):
-        case 0:
-            return ""
+    last_two = abs(rank) % 100
+    if 10 <= last_two <= 20:
+        return "th"
+
+    match abs(rank) % 10:
         case 1:
             return "st"
         case 2:
@@ -106,6 +107,11 @@ if __name__ == "__main__":
 
     while True:
 
+        players.clear()
+        player_names.clear()
+        player_symbols.clear()
+        player_colors.clear()
+
         try:
             gaps = int(input("How many max spaces you want in a window? "))
         except:
@@ -137,18 +143,25 @@ if __name__ == "__main__":
         print("3 for White")
         print("4 for Yellow")
         gap()
-        
+
+        valid_setup = True
         for i in range(1, player_count + 1):
             try:
                 color = int(input(f"Enter {str(i) + get_rank_suffix(i)} player color: "))
+                if color < 0 or color > 4:
+                    raise ValueError("Color must be between 0 and 4.")
             except:
                 print("Proper input was not given, so starting the game again.")
-                continue
+                valid_setup = False
+                break
             player_colors.append(color)
+
+        if not valid_setup:
+            continue
 
         for i in range(player_count):
             player = Player(player_names[i], player_symbols[i], player_colors[i])
-            players.append(player);
+            players.append(player)
 
         gap()
         try:
